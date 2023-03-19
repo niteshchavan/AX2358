@@ -107,7 +107,7 @@ void setup() {
   Serial.begin(9600); //Start serial monitor
   while (!Serial); //Wait until Serial is ready - Leonardo
 
-  WiFi.begin("Atmos", "root@123");     //Connect to your WiFi router
+  WiFi.begin("WIFI", "123456789");     //Connect to your WiFi router
   Serial.println("");
 
     // Wait for connection
