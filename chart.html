@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <style>
+    .button {
+      background-color: #000000;
+	  width: 20%;
+      color: white;
+      padding: 14px 28px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 15%;
+      position: absolute;
+    }
+  </style>
+
+<h1>WIFI Sound Control 6CH</h1>
+<hr>
+<button class="button" onclick="sendRequest('poweron')">Power ON</button> <br><br><br>
+<button class="button" onclick="sendRequest('muteall')">Mute</button><br><br><br>
+<button class="button" onclick="sendRequest('unmuteall')">Unmute</button><br><br><br>
+<button class="button" onclick="sendRequest('suron')">Surround On</button><br><br><br>
+<button class="button" onclick="sendRequest('suroff')">Surround Off</button><br><br><br>
+<button class="button" onclick="sendRequest('mixon')">Mix On</button><br><br><br>
+<button class="button" onclick="sendRequest('mixoff')">Mix Off</button><br><br><br>
+<hr>
+
+
+<script>
+function sendRequest(action) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      // Update the content of a div element with the response from the server
+      document.getElementById("response").innerHTML = this.responseText
+    }
+  };
+  xhttp.open("GET", action, true);
+  xhttp.send();
+}
+</script>
+
+<div id="response"></div>
+
+</body>
+</html>
