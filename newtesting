@@ -1,0 +1,49 @@
+#include <Wire.h>
+
+#define AX2358F_ADDRESS 0x44 // The I2C address of the AX2358F
+
+byte volumeTable[50] = { // The attenuation values for each volume step
+  0b11100000, // -1 dB
+  0b11100001, // -2 dB
+  0b11100010, // -3 dB
+  0b11100011, // -4 dB
+  0b11100100, // -5 dB
+  0b11100101, // -6 dB
+  0b11100110, // -7 dB
+  0b11100111, // -8 dB
+  0b11101000, // -9 dB
+  0b11101001, // -10 dB
+  0b11010000, // -20 dB
+  0b11010001, // -30 dB
+  0b11010010, // -40 dB
+  0b11010011, // -50 dB
+  0b11010100, // -60 dB
+  0b11010101, // -70 dB
+  0b11010110, // -80 dB
+  0b11010111, // -90 dB
+  0b11011000, // -100 dB
+  0b11011001, // -110 dB
+  // The remaining steps can be calculated using the formula -1dB/step
+};
+
+byte currentVolume = 0; // The current volume step, initialized to 0
+
+void setup() {
+  Wire.begin(); // Initialize the I2C bus
+}
+
+void loop() {
+  // Wait for a button press or other input to trigger a volume change
+  if (digitalRead(buttonPin) == HIGH) {
+    // Increase the volume by one step (up to a maximum of 49)
+    if (currentVolume < 49) {
+      currentVolume++;
+    }
+    
+    // Update the AX2358F's attenuation value to match the new volume step
+    byte attenuationValue = volumeTable[currentVolume];
+    Wire.beginTransmission(AX2358F_ADDRESS);
+    Wire.write(attenuationValue);
+    Wire.endTransmission();
+  }
+}
