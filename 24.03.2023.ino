@@ -72,12 +72,6 @@ ESP8266WebServer server(80); //Server on port 80
 //===============================================================
 // This routine is executed when you open its IP in browser
 //===============================================================
-void handleRoot() {
- Serial.println("You called root page");
- String s = MAIN_page; //Read HTML contents
- server.send(200, "text/html", s); //Send web page
-}
- 
 
 void setup() {
   Wire.begin();
@@ -90,13 +84,27 @@ void setup() {
   Serial.println("Enter command to control speakers: "); 
 }
 
-void loop() {
-  server.handleClient();
-  if (Serial.available() > 0) { //Tells Arduino to look out for serial data
-    char command = Serial.read(); //Stores serial data in the command holder
-    process_command(command);
-  }
+void handleRoot() {
+ Serial.println("You called root page");
+ String s = MAIN_page; //Read HTML contents
+ server.send(200, "text/html", s); //Send web page
 }
+
+void webserver(){
+  server.on("/", handleRoot);      //Which routine to handle at root location. This is display page
+  server.on("/volup", volup);
+  server.on("/voldown", voldown);
+  server.on("/SurrOn", SurrOn);
+  server.on("/SurrOff", SurrOff);
+  server.on("/MixOn", MixOn);
+  server.on("/MixOff", MixOff);
+  server.begin(); 
+  Serial.println("HTTP server started at Port 80");
+}
+
+
+
+
 
 void wifi(){
   WiFi.begin("Atmos", "root@123");     //Connect to your WiFi router
@@ -113,34 +121,6 @@ void wifi(){
   Serial.print("Connected to ");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());  //IP address assigned to your ESP
-}
-
-void webserver(){
-  server.on("/", handleRoot);      //Which routine to handle at root location. This is display page
-  server.on("/volup", volup);
-  server.on("/voldown", voldown);
-  server.on("/SurrOn", SurrOn);
-  server.on("/SurrOff", SurrOff);
-  server.on("/MixOn", MixOn);
-  server.on("/MixOff", MixOff);
-  server.begin(); 
-  Serial.println("HTTP server started at Port 80");
-}
-
-void process_command(char command) {
-  //Basic command
-  if (command == '-') {
-    if (mas_vol < 7 ) {
-      mas_vol++;
-      set_vol();
-    }
-  }
-  else if (command == '+') {
-    if (mas_vol > 0) {
-      mas_vol--;
-      set_vol();
-    }
-  }
 }
 
 void poweron(){
@@ -210,7 +190,31 @@ void set_vol() {
 }
 
 void AX2358(int x){
-Wire.beginTransmission(AX2358_address); // transmit to AX2358 chip
-Wire.write (x);
-Wire.endTransmission();
+  Wire.beginTransmission(AX2358_address); // transmit to AX2358 chip
+  Wire.write (x);
+  Wire.endTransmission();
+}
+
+void loop() {
+  server.handleClient();
+  if (Serial.available() > 0) { //Tells Arduino to look out for serial data
+    char command = Serial.read(); //Stores serial data in the command holder
+    process_command(command);
+  }
+}
+
+void process_command(char command) {
+  //Basic command
+  if (command == '-') {
+    if (mas_vol < 7 ) {
+      mas_vol++;
+      set_vol();
+    }
+  }
+  else if (command == '+') {
+    if (mas_vol > 0) {
+      mas_vol--;
+      set_vol();
+    }
+  }
 }
