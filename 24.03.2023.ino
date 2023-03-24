@@ -197,6 +197,10 @@ void AX2358(int x){
 
 void loop() {
   server.handleClient();
+  serialhandel();
+}
+
+void serialhandel(){
   if (Serial.available() > 0) { //Tells Arduino to look out for serial data
     char command = Serial.read(); //Stores serial data in the command holder
     process_command(command);
