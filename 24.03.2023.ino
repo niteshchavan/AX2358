@@ -85,10 +85,9 @@ void setup() {
   while (!Serial); //Wait until Serial is ready
   poweron(); // Start
   wifi(); //Star Wifi
-  server(); // Start Server
+  webserver(); // Start Server at port 80
   //Invites input to control speakers
   Serial.println("Enter command to control speakers: "); 
-
 }
 
 void loop() {
@@ -116,7 +115,7 @@ void wifi(){
   Serial.println(WiFi.localIP());  //IP address assigned to your ESP
 }
 
-void server(){
+void webserver(){
   server.on("/", handleRoot);      //Which routine to handle at root location. This is display page
   server.on("/volup", volup);
   server.on("/voldown", voldown);
@@ -125,7 +124,7 @@ void server(){
   server.on("/MixOn", MixOn);
   server.on("/MixOff", MixOff);
   server.begin(); 
-  Serial.println("HTTP server started");
+  Serial.println("HTTP server started at Port 80");
 }
 
 void process_command(char command) {
@@ -215,4 +214,3 @@ Wire.beginTransmission(AX2358_address); // transmit to AX2358 chip
 Wire.write (x);
 Wire.endTransmission();
 }
-
