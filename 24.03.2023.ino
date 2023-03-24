@@ -84,10 +84,22 @@ void setup() {
   Serial.begin(9600); //Start serial monitor
   while (!Serial); //Wait until Serial is ready
   poweron(); // Start
-
+  wifi(); //Star Wifi
+  server(); // Start Server
   //Invites input to control speakers
   Serial.println("Enter command to control speakers: "); 
 
+}
+
+void loop() {
+  server.handleClient();
+  if (Serial.available() > 0) { //Tells Arduino to look out for serial data
+    char command = Serial.read(); //Stores serial data in the command holder
+    process_command(command);
+  }
+}
+
+void wifi(){
   WiFi.begin("Atmos", "root@123");     //Connect to your WiFi router
   Serial.println("");
 
@@ -95,7 +107,6 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
-
   }
 
   //If connection successful show IP address in serial monitor
@@ -103,6 +114,9 @@ void setup() {
   Serial.print("Connected to ");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());  //IP address assigned to your ESP
+}
+
+void server(){
   server.on("/", handleRoot);      //Which routine to handle at root location. This is display page
   server.on("/volup", volup);
   server.on("/voldown", voldown);
@@ -112,14 +126,6 @@ void setup() {
   server.on("/MixOff", MixOff);
   server.begin(); 
   Serial.println("HTTP server started");
-}
-
-void loop() {
-  server.handleClient();
-  if (Serial.available() > 0) { //Tells Arduino to look out for serial data
-    char command = Serial.read(); //Stores serial data in the command holder
-    process_command(command);
-  }
 }
 
 void process_command(char command) {
