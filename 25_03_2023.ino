@@ -20,10 +20,8 @@ unsigned long lastButtonPress = 0;
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial);
   Wire.begin();
   pinsetup();
-  
 }
 
 
