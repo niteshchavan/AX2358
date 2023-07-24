@@ -1,4 +1,11 @@
-
+//GPIO16: pin is high at BOOT
+//GPIO0: boot failure if pulled LOW
+//GPIO2: pin is high on BOOT, boot failure if pulled LOW
+//GPIO15: boot failure if pulled HIGH
+//GPIO3: pin is high at BOOT
+//GPIO1: pin is high at BOOT, boot failure if pulled LOW
+//GPIO10: pin is high at BOOT
+//GPIO9: pin is high at BOOT
 
 int pin1 = 16;   //0
 int pin2 = 5;    //0
