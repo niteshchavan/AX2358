@@ -1,0 +1,47 @@
+int pin1 = 5;  //button connected
+
+const int bluePin = 16;
+const int orangePin = 4;
+
+int reading;
+int previous = LOW;
+int state = HIGH;
+
+unsigned long debounce = 200UL;
+unsigned long lastDebounceTime = 0; // Rename the variable 'time' to 'lastDebounceTime'
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(bluePin, OUTPUT);
+  pinMode(orangePin, OUTPUT);
+
+  pinMode(pin1, INPUT_PULLUP);
+  lastDebounceTime = millis(); // Initialize 'lastDebounceTime' to the current value of millis()
+}
+
+void loop() {
+  reading = digitalRead(pin1);
+  if (reading == HIGH && previous == LOW && millis() - lastDebounceTime > debounce){
+    if (state == HIGH)
+      state = LOW;
+    else
+      state = HIGH;
+
+    lastDebounceTime = millis();
+    printState();
+  }
+  previous = reading;
+}
+
+void printState() {
+  if (state == HIGH) {
+
+    Serial.println("Button state:  on");
+    digitalWrite(bluePin, HIGH);
+    digitalWrite(orangePin, LOW);
+  } else {
+    Serial.println("Button state:  off");
+    digitalWrite(bluePin, LOW);
+    digitalWrite(orangePin, HIGH);
+  }
+}
