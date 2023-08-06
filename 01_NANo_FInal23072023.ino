@@ -36,7 +36,10 @@ unsigned long lastButtonPress = 0;
 
 int pin1 = 2; // input pin1 surr on off
 int pin2 = 3; // input pin2 mix on off
-
+int pin3 = 9;
+int pin4 = 10;
+int pin5 = 11;
+int pin6 = 12;
 
 int reading1;           // the current reading from pin1
 int reading2;           // the current reading from pin2
@@ -85,6 +88,10 @@ void pinsetup(){
   pinMode(SW, INPUT_PULLUP);
   pinMode(pin1, INPUT_PULLUP);  // for Surr on off
   pinMode(pin2, INPUT_PULLUP);  // for mix on off
+  pinMode(pin3, OUTPUT);
+  pinMode(pin4, OUTPUT);
+  pinMode(pin5, OUTPUT);
+  pinMode(pin6, OUTPUT);
   // Read the initial state of CLK
   lastStateCLK = digitalRead(CLK);
   
@@ -123,20 +130,21 @@ void encoder() {
 		// If the DT state is different than the CLK state then
 		// the encoder is rotating CCW so decrement
 		if (digitalRead(DT) != currentStateCLK) {
-		if (counter < 79){
+      if (counter < 79){
 			counter ++;
-			Serial.print(counter);
+      Serial.print(counter);
 			currentDir ="CW";
         if(array2Index < 9) {
-
-			array2Index++;
-			}
-		else {
-			array2Index = 0;
-			if(currentRecord < 9) {
-				currentRecord++;
+				array2Index++;
+				
 				}
-			}
+				else {
+					array2Index = 0;
+					if(currentRecord < 9) {
+						currentRecord++;
+						
+						}
+				}
         send_vol_data();
       }
 		} 
@@ -322,18 +330,26 @@ void printState1() {
   if (state == HIGH) {
     Serial.println("Button state: Surr on");
     SurrOn();
+    digitalWrite(pin3, HIGH);
+    digitalWrite(pin4, LOW);
   } else {
     Serial.println("Button state: Surr off");
     SurrOff();
+    digitalWrite(pin4, HIGH);
+    digitalWrite(pin3, LOW);
   }
 }
 void printState2() {
   if (state == HIGH) {
     Serial.println("Button state: Mix on");
     MixOn();
+    digitalWrite(pin5, HIGH);
+    digitalWrite(pin6, LOW);
   } else {
     Serial.println("Button state: Mix off");
     MixOff();
+    digitalWrite(pin6, HIGH);
+    digitalWrite(pin5, LOW);
   }
 }
 
